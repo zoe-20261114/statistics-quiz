@@ -1,261 +1,353 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理學期中線上互動測驗（共 50 題）</title>
-    <style>
-        body {
-            font-family: Arial, "Microsoft JhengHei", sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            max-width: 850px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #1a73e8;
-        }
-        .instructions {
-            background: #e8f0fe;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .question-card {
-            background: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .question-title {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #202124;
-        }
-        .options label {
-            display: block;
-            padding: 10px 12px;
-            margin: 6px 0;
-            background: #f8f9fa;
-            border: 1px solid #dcdcdc;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .options label:hover {
-            background: #e9ecef;
-        }
-        .options input {
-            margin-right: 10px;
-        }
-        .submit-btn {
-            background: #1a73e8;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        .submit-btn:hover {
-            background: #1557b0;
-        }
-        .feedback {
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 14px;
-            display: none;
-            line-height: 1.5;
-        }
-        .correct {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>管理學期中線上測驗（手機版）</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 90px;
+    }
+
+    /* 頂部固定進度條 */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.25s ease;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .intro-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .intro-card h1 {
+      font-size: 20px;
+      margin: 0 0 8px 0;
+      color: #0f172a;
+    }
+
+    .intro-card p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* 成績面板 */
+    .score-banner {
+      display: none;
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      color: white;
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+    }
+
+    .score-banner.show {
+      display: block;
+    }
+
+    .score-number {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 8px 0;
+    }
+
+    .score-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-outline-white {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.6);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* 題目卡片 */
+    .q-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .q-card.correct-card {
+      border-color: var(--success);
+    }
+
+    .q-card.wrong-card {
+      border-color: var(--danger);
+    }
+
+    .q-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .q-badge.multi {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .q-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 14px 0;
+      color: #0f172a;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: #fff;
+      font-size: 15px;
+    }
+
+    .option-item:active {
+      transform: scale(0.99);
+    }
+
+    .option-item.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-item.is-correct {
+      border-color: var(--success) !important;
+      background: var(--success-bg) !important;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-item.is-wrong {
+      border-color: var(--danger) !important;
+      background: var(--danger-bg) !important;
+      color: #7f1d1d;
+    }
+
+    .option-marker {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 1px;
+      color: var(--muted);
+    }
+
+    .multi .option-marker {
+      border-radius: 6px;
+    }
+
+    .option-item.selected .option-marker {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .option-item.is-correct .option-marker {
+      border-color: var(--success);
+      background: var(--success);
+      color: white;
+    }
+
+    .option-item.is-wrong .option-marker {
+      border-color: var(--danger);
+      background: var(--danger);
+      color: white;
+    }
+
+    /* 解析區塊 */
+    .explanation-box {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      font-size: 14px;
+      color: #334155;
+      border-left: 4px solid var(--primary);
+    }
+
+    .explanation-box.show {
+      display: block;
+    }
+
+    /* 底部固定按鈕列 */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .submit-btn {
+      width: 100%;
+      max-width: 648px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .submit-btn:active {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>管理學期中線上互動測驗</h1>
-    <div class="instructions">
-        <strong>使用說明：</strong>本測驗包含完整 50 題。點選你的答案後，點擊該題下方的<strong>「提交這題」</strong>按鈕，即可<strong>立即知道對錯並看到詳細解析</strong>！
+  <div class="sticky-header">
+    <div class="header-top">
+      <span>管理學期中測驗（50題）</span>
+      <span id="progress-text">已作答 0 / 50 題</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="intro-card">
+      <h1>管理學期中線上測驗</h1>
+      <p>涵蓋第 1、2、3、5 週課程內容，共 50 題（每題 2 分，滿分 100 分）。複選題需全對才給分。</p>
+    </div>
+
+    <div class="score-banner" id="score-banner">
+      <div style="font-size: 15px; opacity: 0.9;">測驗完成！你的總成績</div>
+      <div class="score-number" id="score-value">0 分</div>
+      <div id="score-detail" style="font-size: 14px; opacity: 0.95;">答對 0 / 50 題</div>
+      <div class="score-actions">
+        <button class="btn-outline-white" onclick="filterWrongOnly()">只看錯題</button>
+        <button class="btn-outline-white" onclick="showAllQuestions()">顯示全部</button>
+        <button class="btn-outline-white" onclick="resetQuiz()">重新測驗</button>
+      </div>
     </div>
 
     <div id="quiz-container"></div>
+  </div>
 
-    <script>
-        const quizData = [
-            {
-                id: 1, type: "single",
-                title: "1. 【單選題】依據管理學定義，管理最核心的本質涵義為何？",
-                options: [
-                    { key: "A", text: "完全仰賴個人卓越技術獨立完成目標" },
-                    { key: "B", text: "經由他人的努力與群策群力以完成工作目標" },
-                    { key: "C", text: "僅追求企業內部資源浪費的最小化" },
-                    { key: "D", text: "純粹由高階領導者進行由上而下的指令下達" }
-                ],
-                answer: ["B"],
-                explanation: "管理的本質在於「透過他人來完成工作（Getting things done through and with people）」，而非單靠個人單打獨鬥。"
-            },
-            {
-                id: 2, type: "single",
-                title: "2. 【單選題】在管理績效評估中，強調「降低資源浪費、用最少投入產出成果」的概念是指什麼？",
-                options: [
-                    { key: "A", text: "效果（Effectiveness）" },
-                    { key: "B", text: "效率（Efficiency）" },
-                    { key: "C", text: "靈活性（Flexibility）" },
-                    { key: "D", text: "正當性（Legitimacy）" }
-                ],
-                answer: ["B"],
-                explanation: "「效率」關注的是「手段（Means）」，即資源的投入與產出比；「效果」則關注「目的（Ends）」，即目標達成度。"
-            },
-            {
-                id: 3, type: "multiple",
-                title: "3. 【複選題】明茲伯格（Mintzberg）將管理者的角色劃分為哪三大面向？（複選）",
-                options: [
-                    { key: "A", text: "人際關係角色（Interpersonal Roles）" },
-                    { key: "B", text: "資訊角色（Informational Roles）" },
-                    { key: "C", text: "決策角色（Decisional Roles）" },
-                    { key: "D", text: "作業操作角色（Operational Roles）" }
-                ],
-                answer: ["A", "B", "C"],
-                explanation: "明茲伯格將管理者角色分為 3 大類共 10 小項：人際關係、資訊、決策。作業操作角色並非其分類。"
-            },
-            {
-                id: 4, type: "single",
-                title: "4. 【單選題】被譽為「科學管理之父」，首創「時間與動作研究」以追求作業標準化的是哪一位管理學者？",
-                options: [
-                    { key: "A", text: "馬克斯·韋伯（Max Weber）" },
-                    { key: "B", text: "亨利·費堯（Henri Fayol）" },
-                    { key: "C", text: "弗雷德里克·泰勒（Frederick W. Taylor）" },
-                    { key: "D", text: "艾爾頓·梅奧（Elton Mayo）" }
-                ],
-                answer: ["C"],
-                explanation: "泰勒透過科學化的時間與動作研究，尋找工作的「最佳單一方法（The One Best Way）。"
-            },
-            {
-                id: 5, type: "single",
-                title: "5. 【單選題】「不存在任何適用於所有組織的唯一最佳管理方法，管理措施必須依據情境條件而定」，此敘述屬於哪一學派的主張？",
-                options: [
-                    { key: "A", text: "古典科學管理學派" },
-                    { key: "B", text: "行政管理學派" },
-                    { key: "C", text: "權變途徑（Contingency Approach）" },
-                    { key: "D", text: "定量管理學派" }
-                ],
-                answer: ["C"],
-                explanation: "權變學派核心主張「視情況而定（It all depends）」，強調環境變數對管理方法的影響。"
-            },
-            {
-                id: 6, type: "single",
-                title: "6. 【單選題】諾貝爾獎得主赫伯特·賽蒙（Herbert Simon）提出何種理論，指出決策者受限於資訊處理能力與時間，只能追求「滿意」而非「最佳」？",
-                options: [
-                    { key: "A", text: "古典完全理性模型" },
-                    { key: "B", text: "有限理性模型（Bounded Rationality）" },
-                    { key: "C", text: "展望理論（Prospect Theory）" },
-                    { key: "D", text: "雙系統認知理論" }
-                ],
-                answer: ["B"],
-                explanation: "人類資訊處理能力與時間有限，因此設定門檻尋求「滿意解（Satisficing）」而非絕對最佳解。"
-            },
-            {
-                id: 7, type: "single",
-                title: "7. 【單選題】康納曼（Daniel Kahneman）在《快思慢想》中提出的「系統一（System 1）」，其運作特徵為何？",
-                options: [
-                    { key: "A", text: "緩慢、深思熟慮、耗費大量心力" },
-                    { key: "B", text: "快速、自動化、直覺且耗費極少認知資源" },
-                    { key: "C", text: "具備嚴謹的統計推論能力" },
-                    { key: "D", text: "完全不受任何捷思與偏誤干擾" }
-                ],
-                answer: ["B"],
-                explanation: "系統一是直覺式、快速、無意識的思考；系統二則是緩慢、深思熟慮且耗費心力的邏輯思考。"
-            },
-            {
-                id: 8, type: "single",
-                title: "8. 【單選題】決策者面對一項顯然已經失敗的專案，卻因為「已經投入大量金錢與時間心血」而不願及時止損，反而持續追加投資，此現象稱為：",
-                options: [
-                    { key: "A", text: "承諾升高（Escalation of Commitment）" },
-                    { key: "B", text: "框架效應（Framing Effect）" },
-                    { key: "C", text: "自我歸因偏誤" },
-                    { key: "D", text: "過度自信偏誤" }
-                ],
-                answer: ["A"],
-                explanation: "承諾升高是指明知決策方向錯誤，卻因不甘心先前已投入的「沉沒成本」而繼續加碼陷得更深。"
-            },
-            {
-                id: 9, type: "single",
-                title: "9. 【單選題】在職場多元性管理架構「DEI」中，「E」所代表的「公平（Equity）」，與傳統齊頭式「平等（Equality）」最大的本質差異為何？",
-                options: [
-                    { key: "A", text: "Equity 主張給予每個人完全相同、不容許任何差異的制式資源與工具" },
-                    { key: "B", text: "Equity 承認每個人起跑點與面臨的系統性障礙不同，因而針對不同個體需求精準分配資源，以追求實質公正的成果" },
-                    { key: "C", text: "Equity 僅強調在招聘廣告中加註宣傳口號" },
-                    { key: "D", text: "Equity 主張廢除所有績效考核，改採抽籤方式晉升主管" }
-                ],
-                answer: ["B"],
-                explanation: "Equality 是給每個人一樣的東西（齊頭式），而 Equity 是給予不同需要的人對應的輔助工具，以達到實質平等。"
-            },
-            {
-                id: 10, type: "single",
-                title: "10. 【單選題】女性或特定少數族群在組織升遷階梯中，往往能晉升到中階管理職，但在邁向最高管理決策層時，常遭遇一層看不見但實質存在的隱形人為體制屏障。管理學上將此障礙稱為：",
-                options: [
-                    { key: "A", text: "達克效應（Dunning-Kruger Effect）" },
-                    { key: "B", text: "玻璃天花板（Glass Ceiling）" },
-                    { key: "C", text: "社會賦閒效應（Social Loafing）" },
-                    { key: "D", text: "帕金森定律（Parkinson's Law）" }
-                ],
-                answer: ["B"],
-                explanation: "玻璃天花板用來形容女性或少數族群在升遷至高階管理層時，遭遇無形且難以突破的障礙。"
-            },
-            {
-                id: 11, type: "single",
-                title: "11. 【單選題】隨著主管在組織金字塔階層的不斷晉升，下列哪一種管理技能的重要性會顯著上升？",
-                options: [
-                    { key: "A", text: "專業技術操作技能" },
-                    { key: "B", text: "概念化技能（Conceptual Skills）" },
-                    { key: "C", text: "機械排程技能" },
-                    { key: "D", text: "特定軟體編程技能" }
-                ],
-                answer: ["B"],
-                explanation: "高階主管需要宏觀思考（概念技能），中階主管需要人際技能，基層主管則最依賴技術技能。"
-            },
-            {
-                id: 12, type: "single",
-                title: "12. 【單選題】主管在分配年度研發預算、指派人力資源投入專案時，主要體現了明茲伯格的哪一項決策角色？",
-                options: [
-                    { key: "A", text: "企業家角色" },
-                    { key: "B", text: "資源分配者（Resource Allocator）" },
-                    { key: "C", text: "混亂排除者" },
-                    { key: "D", text: "傳播者" }
-                ],
-                answer: ["B"],
-                explanation: "資源分配者負責決定組織內資金、時間、設備與人力等稀缺資源的流向。"
-            },
-            {
-                id: 13, type: "single",
-                title: "13. 【單選題】某新創公司為了趕在競品上市前發表新系統，不惜耗費數倍加班費與外包成本達成上市目標，這種營運狀態在管理學上屬於：",
-                options: [
-                    { key: "A", text: "高效率且高效果" },
-                    { key: "B", text: "高效率但低效果" },
-                    { key: "C", text: "低效率但高效果" },
-                    { key: "D", text: "低效率且低效果" }
-                ],
-                answer: ["C"],
-                explanation: "達成目標（高效果），但因為成本超支、浪費資源（低效率）。"
-            },
-            {
-                id: 14, type: "single",
-                title: "14. 【單選題】在卡茲（Robert Katz）的管理技能模型中，哪一種技能在「基層、中層、高層」管理者中皆維持同等極高的重要性？",
-                options: [
-              
+  <div class="bottom-bar" id="bottom-bar">
+    <button class="submit-btn" onclick="submitQuiz()">交卷並自動批改</button>
+  </div>
+
+  <script>
+    const questions = [
+      { id: 1, type: 'single', q: '依據管理學定義，管理最核心的本質涵義為何？', opts: ['A.完全仰賴個人卓越技術獨立完成目標', 'B.經由他人的努力與群策群力以完成工作目標', 'C.僅追求企業內部資源浪費的最小化', 'D.純粹由高階領導者進行由上而下的指令下達'], ans: [1], exp: '管理的核心定義是「透過他人並與他人一起（Getting things done through and with other people）」有效率且有效果地完成組織目標。' },
+      { id: 2, type: 'single', q: '在管理績效評估中，強調「降低資源浪費、用最少投入產出成果」的概念是指什麼？', opts: ['A.效果（Effectiveness）', 'B.效率（Efficiency）', 'C.靈活性（Flexibility）', 'D.正當性（Legitimacy）'], ans: [1], exp: '效率（Efficiency）強調「把事情做對（Doing things right）」，即投入與產出的比率，追求資源浪費最小化。' },
+      { id: 3, type: 'multi', q: '明茲伯格（Mintzberg）將管理者的角色劃分為哪三大面向？（複選）', opts: ['A.人際關係角色（Interpersonal Roles）', 'B.資訊角色（Informational Roles）', 'C.決策角色（Decisional Roles）', 'D.作業操作角色（Operational Roles）'], ans: [0, 1, 2], exp: 'Mintzberg 將管理者角色分為三大類共十種角色：人際關係角色、資訊角色與決策角色。' },
+      { id: 4, type: 'single', q: '被譽為「科學管理之父」，首創「時間與動作研究」以追求作業標準化的是哪一位管理學者？', opts: ['A.馬克斯·韋伯（Max Weber）', 'B.亨利·費堯（Henri Fayol）', 'C.弗雷德里克·泰勒（Frederick W. Taylor）', 'D.艾爾頓·梅奧（Elton Mayo）'], ans: [2], exp: '泰勒（Frederick W. Taylor）於 1911 年出版《科學管理原理》，被譽為科學管理之父。' },
+      { id: 5, type: 'single', q: '「不存在任何適用於所有組織的唯一最佳管理方法，管理措施必須依據情境條件而定」，此敘述屬於哪一學派的主張？', opts: ['A.古典科學管理學派', 'B.行政管理學派', 'C.權變途徑（Contingency Approach）', 'D.定量管理學派'], ans: [2], exp: '權變途徑認為組織環境與情境變數不同，沒有放諸四海皆準的單一最佳管理方式。' },
+      { id: 6, type: 'single', q: '諾貝爾獎得主赫伯特·賽蒙（Herbert Simon）提出何種理論，指出決策者受限於資訊處理能力與時間，只能追求「滿意」而非「最佳」？', opts: ['A.古典完全理性模型', 'B.有限理性模型（Bounded Rationality）', 'C.展望理論（Prospect Theory）', 'D.雙系統認知理論'], ans: [1], exp: '賽蒙提出「有限理性（Bounded Rationality）」，指出管理者受限於認知與資訊限制，會選擇「滿意（Satisficing）」方案。' },
+      { id: 7, type: 'single', q: '康納曼（Daniel Kahneman）在《快思慢想》中提出的「系統一（System 1）」，其運作特徵為何？', opts: ['A.緩慢、深思熟慮、耗費大量心力', 'B.快速、自動化、直覺且耗費極少認知資源', 'C.具備嚴謹的統計推
