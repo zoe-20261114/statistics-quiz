@@ -1,277 +1,261 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>應用統計學｜期中整合測驗</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --foreground: #132c29;
-      --muted-foreground: #475f5a;
-      --border: #cddbd5;
-      --destructive: #a32120;
-      --primary: #086455;
-      --primary-dark: #05493e;
-      --surface: #fff;
-      --canvas: #edf4f1;
-      --tint: #e3f2eb;
-      font-family: system-ui, "Microsoft JhengHei", "PingFang TC", sans-serif;
-      font-size: 16px;
-      line-height: 1.55;
-      background: var(--canvas);
-      color: var(--foreground);
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: clamp(1rem, 3.5vw, 2.75rem) 1rem; }
-    main { max-width: 44rem; margin: 0 auto; }
-    h1 { font-size: clamp(1.45rem, 4.4vw, 2rem); letter-spacing: 0.02em; line-height: 1.3; }
-    h2 { font-size: clamp(1.1rem, 3.6vw, 1.3rem); line-height: 1.5; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: clamp(0.875rem, 3vw, 1.5rem); }
-    .viz-row { display: flex; flex-wrap: wrap; align-items: center; }
-    .viz-badge { border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.85rem; background: var(--tint); color: var(--primary-dark); }
-    .text-muted { color: var(--muted-foreground); }
-    .text-small { font-size: 0.85rem; }
-    .tabular-nums { font-variant-numeric: tabular-nums; }
-    .progress { height: 0.45rem; border-radius: 99px; background: #d2e1db; overflow: hidden; }
-    .progress-bar { height: 100%; background: var(--primary); border-radius: inherit; }
-    .form-check {
-      min-height: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      border: 1px solid var(--border);
-      border-radius: 0.65rem;
-      padding: 0.65rem;
-    }
-    .form-check:has(input:checked) { border-color: var(--primary); background: var(--tint); }
-    .form-check:has(input:enabled) { cursor: pointer; }
-    .form-check-input { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; margin: 0; accent-color: var(--primary); }
-    .btn {
-      appearance: none;
-      min-height: 2.75rem;
-      border: 1px solid var(--border);
-      border-radius: 0.6rem;
-      background: var(--surface);
-      color: var(--foreground);
-      padding: 0.55rem 0.9rem;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
-    .btn-primary:hover:enabled { background: var(--primary-dark); border-color: var(--primary-dark); }
-    .btn:disabled { opacity: 0.55; cursor: default; }
-    :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-    body #applied-statistics-midterm-quiz .sq-header h1 { padding-inline-end: 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理學期中線上互動測驗（共 50 題）</title>
+    <style>
+        body {
+            font-family: Arial, "Microsoft JhengHei", sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+        }
+        .instructions {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .question-card {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #202124;
+        }
+        .options label {
+            display: block;
+            padding: 10px 12px;
+            margin: 6px 0;
+            background: #f8f9fa;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options label:hover {
+            background: #e9ecef;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .submit-btn:hover {
+            background: #1557b0;
+        }
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: none;
+            line-height: 1.5;
+        }
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
-  <main>
-    <noscript>請用支援 JavaScript 的瀏覽器開啟測驗。</noscript>
-    <div id="applied-statistics-midterm-quiz" lang="zh-Hant">
-  <header class="sq-header">
-    <h1>應用統計學｜期中整合測驗</h1>
-    <p class="text-muted text-small">68 題單選 · 每送出一題就看解析</p>
-    <div id="sq-progress" class="progress" role="progressbar" aria-label="本輪作答進度" aria-valuemin="0" aria-valuemax="68" aria-valuenow="0">
-      <div id="sq-progress-bar" class="progress-bar" style="width:0%"></div>
-    </div>
-  </header>
 
-  <section id="sq-round" class="card sq-panel" aria-labelledby="sq-question">
-    <div class="viz-row sq-meta">
-      <span id="sq-round-count" class="text-muted text-small tabular-nums"></span>
-      <span id="sq-direction" class="viz-badge"></span>
-    </div>
-    <p id="sq-origin" class="sq-origin text-muted text-small"></p>
-    <h2 id="sq-question" class="sq-question"></h2>
-    <fieldset id="sq-choices" class="sq-choices" aria-labelledby="sq-question"></fieldset>
-    <div class="viz-row sq-actions">
-      <button id="sq-submit" type="button" class="btn btn-primary" aria-controls="sq-feedback" disabled>送出本題</button>
+    <h1>管理學期中線上互動測驗</h1>
+    <div class="instructions">
+        <strong>使用說明：</strong>本測驗包含完整 50 題。點選你的答案後，點擊該題下方的<strong>「提交這題」</strong>按鈕，即可<strong>立即知道對錯並看到詳細解析</strong>！
     </div>
 
-    <div aria-live="polite" aria-atomic="true">
-      <div id="sq-feedback" class="sq-feedback" hidden>
-        <p><strong>本題解析</strong> · <span id="sq-verdict"></span></p>
-        <p id="sq-selected" hidden></p>
-        <p><strong>正確答案</strong> <span id="sq-answer"></span></p>
-        <p id="sq-explanation"></p>
-        <div class="viz-row sq-actions">
-          <button id="sq-advance" type="button" class="btn btn-primary">下一題</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    <div id="quiz-container"></div>
 
-  <section id="sq-summary" class="card sq-panel" aria-labelledby="sq-summary-score" hidden>
-    <h2 id="sq-summary-score" aria-live="polite"></h2>
-    <p id="sq-summary-detail"></p>
-    <div class="viz-row sq-actions">
-      <button id="sq-review" type="button" class="btn btn-primary">重做錯題</button>
-      <button id="sq-restart" type="button" class="btn">重做整份</button>
-    </div>
-  </section>
-</div>
-
-<style>
-  #applied-statistics-midterm-quiz { min-width: 0; overflow-wrap: anywhere; }
-  #applied-statistics-midterm-quiz [hidden] { display: none; }
-  #applied-statistics-midterm-quiz .sq-header { margin: 0 0 0.9rem; padding: 0.15rem 0; }
-  #applied-statistics-midterm-quiz .sq-header h1 { margin: 0 0 0.3rem; padding-inline-end: 5rem; }
-  #applied-statistics-midterm-quiz .sq-header p { margin: 0 0 0.75rem; }
-  #applied-statistics-midterm-quiz .sq-panel { min-width: 0; }
-  #applied-statistics-midterm-quiz .sq-meta { justify-content: space-between; gap: 0.45rem; }
-  #applied-statistics-midterm-quiz .sq-origin { margin: 0.3rem 0 0; }
-  #applied-statistics-midterm-quiz h2 { margin: 0.65rem 0 0.85rem; }
-  #applied-statistics-midterm-quiz .sq-question { white-space: pre-line; }
-  #applied-statistics-midterm-quiz .sq-choices { border: 0; margin: 0; padding: 0; min-inline-size: 0; display: grid; gap: 0.35rem; }
-  #applied-statistics-midterm-quiz .sq-actions { margin-top: 0.9rem; gap: 0.55rem; }
-  #applied-statistics-midterm-quiz .sq-feedback { border-top: 1px solid var(--border); padding-top: 0.65rem; margin-top: 0.65rem; }
-  #applied-statistics-midterm-quiz .sq-feedback p { margin: 0 0 0.4rem; }
-  #applied-statistics-midterm-quiz .sq-verdict-incorrect { color: var(--destructive); }
-</style>
-
-<script>
-(() => {
-  "use strict";
-
-  const bank = [{"id":"c1-01","section":"第 1 章 概論","number":"01","kind":"正","prompt":"統計學之英文？","options":["State","Statistics","Sample","SPSS"],"correct":1,"explanation":"Statistics 指統計學。Statistic（單數）可指由樣本計算出的統計量，例如樣本平均。"},{"id":"c1-02","section":"第 1 章 概論","number":"02","kind":"正","prompt":"敘述統計之英文？","options":["Inference Statistics","Descriptive Statistics","Population","Sample"],"correct":1,"explanation":"Descriptive Statistics 用表格、圖形或數字整理已觀察到的資料。"},{"id":"c1-03","section":"第 1 章 概論","number":"03","kind":"正","prompt":"推論統計之英文？","options":["Inferential Statistics","Descriptive Statistics","Population","Sample"],"correct":0,"explanation":"Inferential Statistics 利用樣本資料，推估或檢定母體的特性。"},{"kind":"正","prompt":"下列哪一組是題庫列舉的兩種常用統計分析工具？","options":["Excel、SPSS","Word、PowerPoint","SPSS、Word","Excel、PowerPoint"],"explanation":"原複選題列出的兩項是 Excel 和 SPSS。Excel 可用分析工具箱，SPSS 提供統計分析功能。","id":"c1-04a","section":"第 1 章 概論","number":"04","correct":0},{"kind":"反","prompt":"下列軟體與常見用途的配對，何者有誤？","options":["Word：主要用於文書編輯","SPSS：可用於統計分析","PowerPoint：主要用於統計檢定","Excel：可用於統計分析"],"explanation":"PowerPoint 的主要用途是製作簡報。題庫列舉 Excel、SPSS 作為統計分析工具。","id":"c1-04b","section":"第 1 章 概論","number":"04","correct":2},{"id":"c1-05","section":"第 1 章 概論","number":"05","kind":"正","prompt":"T 科大有 8,000 名學生。為了解該校學生購買教科書的情形，研究者隨機抽取 80 人，發現受訪者平均購買 8.5 本。此研究的母體是哪一項？","options":["T科大 8,000 名學生","抽取的 80 名學生","8.5 本教科書","大學生教科書平均購買本數"],"correct":0,"explanation":"母體是研究想了解的全體，也就是 T 科大的 8,000 名學生。"},{"id":"c1-06","section":"第 1 章 概論","number":"06","kind":"正","prompt":"T 科大有 8,000 名學生，研究者隨機抽取 80 人調查教科書購買情形，得到平均 8.5 本。此研究的樣本是哪一項？","options":["T科大 8,000 名學生","抽取的 80 名學生","8.5 本教科書","大學生教科書平均購買本數"],"correct":1,"explanation":"樣本是從全校學生中抽出並觀察的 80 人。8.5 本是由樣本資料計算出的平均數。"},{"id":"c1-07","section":"第 1 章 概論","number":"07","kind":"正","prompt":"下列何者屬於敘述統計？","options":["抽查 100 罐玉米，檢定整批產品的平均重量","抽查 100 名新生兒，估計全縣新生兒平均體重","用選民抽樣調查估計下次市長選舉結果","計算已送達的 100 箱包裹的平均重量，只整理這批包裹"],"correct":3,"explanation":"只整理實際觀察的 100 箱包裹，屬於敘述統計。其餘三項都用部分資料推論較大的研究對象。"},{"kind":"正","prompt":"下列何者屬於推論統計？","options":["抽查 100 罐玉米，檢定整批的平均重量是否達標","計算這 100 罐抽查玉米的重量中位數，只描述這 100 罐","畫出這 100 罐抽查玉米的重量分布，只整理這 100 罐","計算這 100 罐抽查玉米的最大重量，只整理這 100 罐"],"explanation":"從抽到的 100 罐推論整批產品，超出已觀察的樣本範圍，屬於推論統計。","id":"c1-08a","section":"第 1 章 概論","number":"08","correct":0},{"kind":"反","prompt":"下列何者不屬於推論統計？","options":["用選民抽樣調查預測市長選舉結果","抽查部分罐頭，檢定整批的平均包裝重量","只計算已送達的 100 箱包裹的平均重量","抽查部分新生兒，估計全縣新生兒平均體重"],"explanation":"只計算這 100 箱的平均重量是在描述已有資料。其餘選項都從樣本推估或檢定母體。","id":"c1-08b","section":"第 1 章 概論","number":"08","correct":2},{"id":"c1-09","section":"第 1 章 概論","number":"09","kind":"正","prompt":"我們想知道大學畢業同學之平均年薪資為何？因此隨機抽取了 80 位大學畢業同學研究。請問此研究之母體(Population)為何？","options":["所有大學畢業同學","抽取的 80 位大學畢業同學","抽取的 80 位同學平均年薪","大學生的平均年薪"],"correct":0,"explanation":"母體是研究想了解的全國大學畢業生。全國畢業生的平均年薪是這個母體的特徵。"},{"id":"c1-10","section":"第 1 章 概論","number":"10","kind":"正","prompt":"研究者抽取 80 位大學畢業生，想估計全體大學畢業生的平均年薪。實際對每位受訪者記錄的變數是哪一項？","options":["抽取的 80 位畢業生","80 位畢業生的平均年薪","全體大學畢業生的平均年薪","每位受訪畢業生的年薪金額"],"correct":3,"explanation":"變數是每位畢業生身上所觀察的「年薪金額」。原題選項寫「平均年薪」，本題把個人年薪與算出的樣本平均分開。"},{"kind":"正","prompt":"下列何者屬於質化資料？","options":["電子公司員工人數","公司工程師的職位等級","某國失業率","每日客服申訴電話通數"],"explanation":"職位等級表示職位類別及高低順序，屬於質化資料。員工人數、失業率和電話通數都表示數量。","id":"c2-01a","section":"第 2 章 資料與圖表","number":"01","correct":1},{"kind":"反","prompt":"下列何者不屬於質化資料？","options":["員工的教育程度類別","工程師的職位等級","受訪學生的血型","某國的失業率"],"explanation":"失業率是表示數量大小的比例，屬於量化資料。教育程度、職位等級和血型描述類別。","id":"c2-01b","section":"第 2 章 資料與圖表","number":"01","correct":3},{"kind":"正","prompt":"下列哪一組的兩項資料都屬於量化資料？","options":["學生住校人數、學生血型","學生身高、工程師職位等級","冰淇淋重量、每日客服申訴電話通數","客服申訴類別、員工教育程度"],"explanation":"重量是量測結果，電話通數是計數結果，兩者都有數量意義。","id":"c2-02a","section":"第 2 章 資料與圖表","number":"02","correct":2},{"kind":"反","prompt":"下列何者不屬於量化資料？","options":["客服申訴的類別","學生住校的人數","學生的身高","冰淇淋的重量"],"explanation":"申訴類別描述問題屬於哪一種，因此是質化資料。人數、身高和重量都表示數量。","id":"c2-02b","section":"第 2 章 資料與圖表","number":"02","correct":0},{"kind":"正","prompt":"下列何者是連續型量化資料？","options":["每日客服申訴電話通數","統計學考試及格人數","個人 LINE 好友個數","車輛行駛速度"],"explanation":"速度可在數值區間內細分，例如 45.3 或 45.35 公里／小時。其他三項是逐一計數的結果。","id":"c2-03a","section":"第 2 章 資料與圖表","number":"03","correct":3},{"kind":"反","prompt":"依本課分類，下列何者不屬於連續型資料？","options":["員工薪資金額","每日客服申訴電話通數","助教平均身高","車輛行駛速度"],"explanation":"每天的電話通數只能取 0、1、2 等個數，是離散型資料。本課將薪資金額、身高和速度當作可量測的數值。","id":"c2-03b","section":"第 2 章 資料與圖表","number":"03","correct":1},{"kind":"正","prompt":"下列何者是直接計數得到的離散型資料？","options":["統計學期末考及格人數","棒球隊員的平均薪資","籃球隊員的平均體重","跑步選手的完賽時間"],"explanation":"及格人數要逐人計數，只會得到整數個數。","id":"c2-04a","section":"第 2 章 資料與圖表","number":"04","correct":0},{"kind":"反","prompt":"下列何者不是逐一計數得到的原始資料？","options":["統計學期末考及格人數","個人 LINE 好友個數","棒球隊員的平均薪資","某天收到的申訴電話通數"],"explanation":"平均薪資是用每人的薪資金額算出的摘要。其餘三項都可直接逐一計數。","id":"c2-04b","section":"第 2 章 資料與圖表","number":"04","correct":2},{"id":"c2-05","section":"第 2 章 資料與圖表","number":"05","kind":"正","prompt":"調查報告寫「本次受訪的北部大專生中，有 65% 騎機車」。若報告只彙整這次受訪者，屬於哪一種統計？","options":["敘述統計","推論統計","資料採礦","以上皆是"],"correct":0,"explanation":"65% 在這裡是對已觀察受訪者的資料摘要，沒有推廣到未受訪學生。"},{"id":"c2-06","section":"第 2 章 資料與圖表","number":"06","kind":"正","prompt":"某報社分別抽樣兩屆電競比賽觀眾，檢定全體觀眾使用 FB 直播的比例是否比兩年前提高。這是哪一種統計？","options":["敘述統計","推論統計","迴歸分析","變異數分析"],"correct":1,"explanation":"用抽樣結果檢定全體觀眾的比例是否提高，屬於推論統計。"},{"id":"c2-07","section":"第 2 章 資料與圖表","number":"07","kind":"正","prompt":"下列何種圖是用來呈現資料隨時間變化情形較合宜之方式？","options":["圓餅圖","直方圖","橫條圖","時間序列圖"],"correct":3,"explanation":"時間序列圖按月份等時間順序呈現資料，適合看升降趨勢。"},{"kind":"正","prompt":"要呈現不同職位等級的員工人數，哪一種圖最合適？","options":["長條圖","直方圖","散佈圖","莖葉圖"],"explanation":"職位等級是類別。長條圖可用每根長條的高度比較各類別的人數。","id":"c2-08a","section":"第 2 章 資料與圖表","number":"08","correct":0},{"kind":"反","prompt":"要呈現各血型的學生人數或占比，何者不適合直接拿來繪製這種分類資料？","options":["長條圖","圓餅圖","直方圖","柏拉圖"],"explanation":"直方圖的橫軸用數值區間呈現分布。血型是類別，可用長條圖、圓餅圖或按次數排序的柏拉圖呈現。","id":"c2-08b","section":"第 2 章 資料與圖表","number":"08","correct":2},{"kind":"正","prompt":"要呈現身高落在 150 至未滿 155、155 至未滿 160 等連續數值區間的人數，並保留區間順序，最適合用哪一種圖？","options":["圓餅圖","直方圖","柏拉圖","時間序列圖"],"explanation":"直方圖依數值區間從小到大排列，適合呈現身高的分布形狀。原題也列柏拉圖，但柏拉圖是把整理後的類別按次數等指標排序。","id":"c2-09a","section":"第 2 章 資料與圖表","number":"09","correct":1},{"kind":"反","prompt":"下列何者不以直接呈現數值資料的分布為主要用途？","options":["直方圖","莖葉圖","箱型圖","柏拉圖"],"explanation":"柏拉圖主要把類別或已分好的群組依次數等指標排序。本題著重直接呈現數值分布，原題曾把柏拉圖與直方圖並列。","id":"c2-09b","section":"第 2 章 資料與圖表","number":"09","correct":3},{"id":"c2-10","section":"第 2 章 資料與圖表","number":"10","kind":"正","prompt":"一張直方圖的大多數資料集中在左側，往右側拖出較長的尾巴。這個分布是哪一種？","options":["右偏","左偏","對稱","中偏"],"correct":0,"explanation":"偏態看尾巴朝哪一側延伸。右邊尾巴較長，所以叫右偏。"},{"id":"e1017-01","section":"1017 自我評量","number":"01","kind":"正","prompt":"關於 Statistics 與 statistic 的用法，下列何者為是？","options":["Statistics 可以指「統計學」","statistic 是「母體」的英文","Statistics 是「樣本」的英文","statistic 專指母體的平均值"],"correct":0,"explanation":"Statistics 可指統計學。單數 statistic 可指樣本統計量，例如樣本平均，母體的特性通常稱為參數。"},{"id":"e1017-02","section":"1017 自我評量","number":"02","kind":"正","prompt":"EXCEL 2016 資料分析功能之啟動，在現有的增益集中要將哪一個勾選？","options":["分析工具箱 VBA","規劃求解增益集","條件式加總精靈","分析工具箱"],"correct":3,"explanation":"Excel 2016 題目要找的是「分析工具箱」，啟用後可從「資料」使用「資料分析」。"},{"id":"e1017-03","section":"1017 自我評量","number":"03","kind":"正","prompt":"利用 EXCEL 資料分析的抽樣功能，其抽樣結果可能會重複，可利用哪個功能解決？","options":["資料剖析","移除重複","資料驗證","合併彙算"],"correct":1,"explanation":"「移除重複」可依指定欄位保留一筆。用唯一識別碼可以區分「同一筆抽到多次」和「不同筆的數值相同」。"},{"id":"e1017-04","section":"1017 自我評量","number":"04","kind":"反","prompt":"在 Excel 資料分析的「隨機抽樣」功能中，下列何者有誤？","options":["抽樣結果可能有數據重複","每個樣本被抽出的機率都不相同","數據重複是因為抽出後又放回","涵蓋標題則必須將標記打勾"],"correct":1,"explanation":"這道題的隨機抽樣設定下，每次抽取時各筆資料有相同的被抽中機率。放回後仍可能再抽到同一筆。"},{"id":"e1017-05","section":"1017 自我評量","number":"05","kind":"正","prompt":"一位工廠的老闆要求定期對所有員工的薪資有一份圖形的彙總摘要。這圖形的摘要在統計學上為：","options":["樣本","敘述統計","統計推論","實驗"],"correct":1,"explanation":"把已取得的薪資資料整理成圖表，是敘述統計。"},{"id":"e1017-06","section":"1017 自我評量","number":"06","kind":"正","prompt":"對母體所有資料進行全面調查稱為：","options":["普查","母體","樣本","推論"],"correct":0,"explanation":"普查涵蓋所定義母體的每一個成員。抽樣調查則只調查其中一部分。"},{"id":"e1017-07","section":"1017 自我評量","number":"07","kind":"正","prompt":"某縣市抽樣 1,000 位合格選民詢問投票意向，在這個研究中，這 1,000 位居民是：","options":["普查","觀察值","樣本","母體"],"correct":2,"explanation":"縣市的所有合格選民是母體。抽出來接受調查的 1,000 人是樣本，投票意向是記錄的變數。"},{"id":"e1017-08","section":"1017 自我評量","number":"08","kind":"反","prompt":"在 Excel 使用「移除重複」整理抽樣結果，下列何者有誤？","options":["可用指定的欄位判斷資料是否重複","有重複資料時，刪除後的筆數可能減少","刪除重複項目後會自動補抽新資料","可用唯一識別碼判斷是否抽到同一筆"],"correct":2,"explanation":"移除重複只會整理現有資料，不會補抽。若需要維持原樣本數，應選擇適合的不放回抽樣方法。"},{"id":"e1017-09","section":"1017 自我評量","number":"09","kind":"正","prompt":"EXCEL 資料分析中抽樣功能之系統抽樣法，適合應用於？","options":["由小至大排序後的數值資料","由大至小排序後的數值資料","隨機沒排序的數值資料","文字資料"],"correct":2,"explanation":"依題庫選隨機排列、未依數值排序的資料。系統抽樣固定間隔取樣，若名單的週期剛好和抽樣間隔重合，容易只抽到同一類型。"},{"id":"e1017-10","section":"1017 自我評量","number":"10","kind":"反","prompt":"關於常見的系統抽樣，下列何者有誤？","options":["一定要先把數值由小到大排序","通常在第一個抽樣間隔中隨機決定起點","決定起點後依固定間隔抽取","資料若有規律週期，應檢查它是否和抽樣間隔重合"],"correct":0,"explanation":"系統抽樣的核心是依固定間隔選取，沒有必須依數值大小排序的條件。"},{"id":"e1017-11","section":"1017 自我評量","number":"11","kind":"算","prompt":"資料依序為 12、5、35、28、58、121、50、7。系統抽樣從第 3 筆開始，抽樣間隔為 3，也就是相鄰兩次抽中的位置差 3。第二個抽到的數值是多少？","options":["5","121","50","28"],"correct":1,"explanation":"第一個抽到第 3 筆的 35。第二個位置是 3＋3＝6，第 6 筆的數值是 121。"},{"id":"e1017-12","section":"1017 自我評量","number":"12","kind":"正","prompt":"如果是使用數的，例如：扳著手指計數(Counting Process)，得到的變數是？","options":["Discrete Variables(離散型變數)","Continuous Variables(連續型變數)","Internet Variable","Interactive Variable"],"correct":0,"explanation":"螺絲個數是計數結果，只會得到 0、1、2 等可能值，屬於離散型變數。"},{"id":"e1017-13","section":"1017 自我評量","number":"13","kind":"正","prompt":"如果是使用量的，例如：游標尺或是身高/體重計(Measuring Process)，得到的變數是？","options":["Discrete Variables(離散型變數)","Continuous Variables(連續型變數)","Internet Variable","Interactive Variable"],"correct":1,"explanation":"長度可在某個區間內細分，是連續型變數。尺的精度只影響記錄到哪一位。"},{"id":"e1017-14","section":"1017 自我評量","number":"14","kind":"正","prompt":"性別是屬於何種衡量尺度？","options":["順序尺度","區間尺度","名目尺度","比率尺度"],"correct":2,"explanation":"性別類別用於分類，沒有數量大小或等級高低，屬於名目尺度。"},{"id":"e1017-15","section":"1017 自我評量","number":"15","kind":"正","prompt":"a.性別; b.地區; c.血型; d.宗教信仰 請問有幾個項目是屬於名目尺度？","options":["4個","3個","2個","0個"],"correct":0,"explanation":"這四項都是用來分類的資料，類別沒有固定高低順序，所以 4 項都是名目尺度。"},{"id":"e1017-16","section":"1017 自我評量","number":"16","kind":"正","prompt":"薪資所得是屬於何種衡量尺度？","options":["名目尺度","比率尺度","區間尺度","等距尺度"],"correct":1,"explanation":"0 元表示薪資所得為零。60,000 元是 30,000 元的兩倍，因此是比率尺度。"},{"id":"e1017-17","section":"1017 自我評量","number":"17","kind":"正","prompt":"用攝氏度（°C）記錄室溫，屬於哪一種衡量尺度？","options":["名目尺度","等比尺度","區間尺度","比率尺度"],"correct":2,"explanation":"10°C 到 20°C 的溫差可與其他溫差比較。0°C 有刻度上的意義，但不是絕對零點。"},{"id":"e1017-18","section":"1017 自我評量","number":"18","kind":"正","prompt":"滿意度分成：1.非常不滿意、2.不滿意、3.尚可、4.滿意、5.非常滿意，是屬於何種衡量尺度？","options":["順序尺度","比率尺度","名目尺度","區間尺度"],"correct":0,"explanation":"1 到 5 代表滿意程度的高低。相鄰等級之間的差距未必相等，因此是順序尺度。"},{"id":"e1017-19","section":"1017 自我評量","number":"19","kind":"正","prompt":"「等距尺度」對應下列哪一種衡量尺度？","options":["區間尺度","比率尺度","順序尺度","名目尺度"],"correct":0,"explanation":"區間尺度也叫等距尺度。它允許比較相等的數值差距。"},{"id":"e1017-20","section":"1017 自我評量","number":"20","kind":"正","prompt":"下列哪一個變數是比例尺度？","options":["性別","攝氏溫度","收入","身分證號碼"],"correct":2,"explanation":"收入的零點表示沒有收入，可比較倍數。攝氏溫度屬區間尺度，身分證號碼及性別類別是名目尺度。"},{"number":"01","prompt":"a. 有10,000名員工的公司\nb. 對某大學的100名學生進行訪談\nc. 手機廠中用來測試耐摔程度的手機\nd. 工廠用來進行破壞性試驗的材料。\n\n請問有幾個敘述是屬於母體？","options":["0個","3個","2個","1個"],"correct":3,"explanation":"依題意，a 指公司全部 10,000 名員工，是研究的全體。b、c、d 都只訪問或測試抽出來的一部分，所以只有 1 個母體。","id":"e1107-01","section":"1107 自我評量","kind":"正"},{"number":"02","prompt":"a. 一班有30位同學，想了解學生參加聚餐的意願\nb. 有50萬名會員的連鎖店，想了解會員對服務的滿意度\nc. 某公司擁有40名員工，想瞭解員工對於公司福利的滿意程度\nd. 一家擁有近300萬客戶的電信業者，想瞭解顧客對於該公司的通訊滿意程度。\n\n請問有幾個敘述是適合用普查？","options":["2個","1個","3個","4個"],"correct":0,"explanation":"a 的 30 位同學和 c 的 40 名員工，人數少，較容易逐一調查。b 和 d 的對象很多，抽樣較可行。所以有 2 個適合普查。","id":"e1107-02","section":"1107 自我評量","kind":"正"},{"number":"03","prompt":"統計推論是：","options":["利用由樣本所得的資訊對母體特性做推論的程序","與敘述統計相同","利用由母體特性對樣本做推論的程序","與普查相同"],"correct":0,"explanation":"統計推論是「由樣本推到母體」。例如調查部分學生，再用得到的結果估計全校學生的情形。","id":"e1107-03","section":"1107 自我評量","kind":"正"},{"number":"04","prompt":"一位統計教授詢問班上所有學生的年齡，由此資訊他聲稱大學中所有學生的平均年齡是24歲。請問這是何種例子？","options":["實驗","敘述統計","普查","統計推論"],"correct":3,"explanation":"教授手上只有班上學生的年齡，卻用這些資料估計全校學生的平均年齡。這就是從樣本推估母體，屬於統計推論。","id":"e1107-04","section":"1107 自我評量","kind":"正"},{"number":"05","prompt":"美國大學的學生成績單上的成績：A, B, C, D, F這樣的成績變數是屬於？","options":["Nominal Scale","Ordinal Scale","Interval Scale","Ratio Scale"],"correct":1,"explanation":"Ordinal Scale 是順序尺度。A、B、C、D、F 有高低順序，但只看等級，無法知道相鄰等級差多少分。","id":"e1107-05","section":"1107 自我評量","kind":"正"},{"number":"06","prompt":"定量資料：","options":["總是非數值的","可能是數值或非數值的","總是數值的","不可能為負值"],"correct":2,"explanation":"定量資料用數值表示數量或測量結果，例如人數、身高和攝氏溫度。−3°C 也是數值，所以定量資料可以是負數。","id":"e1107-06","section":"1107 自我評量","kind":"正"},{"number":"07","prompt":"區間尺度又稱？","options":["等距尺度","等比尺度","等級尺度","等序尺度"],"correct":0,"explanation":"區間尺度又叫等距尺度。以攝氏溫度為例，從 10°C 到 20°C，和從 20°C 到 30°C，兩段都相差 10°C。","id":"e1107-07","section":"1107 自我評量","kind":"正"},{"number":"08","prompt":"算術運算不適合用於：","options":["比率尺度","區間尺度","名目尺度","比率和區間尺度"],"correct":2,"explanation":"名目尺度的值只用來分辨類別。即使把血型用 1、2、3、4 編碼，這些數字相加或取平均也沒有分類上的意義。","id":"e1107-08","section":"1107 自我評量","kind":"反"},{"number":"09","prompt":"包含絕對零點的衡量尺度為：","options":["名目尺度","順序尺度","比率尺度","區間尺度"],"correct":2,"explanation":"比率尺度有絕對零點。以重量為例，0 公斤表示沒有重量，10 公斤是 5 公斤的兩倍。","id":"e1107-09","section":"1107 自我評量","kind":"正"},{"number":"10","prompt":"元素中某個令人感興趣的特性稱為：","options":["樣本","資料集合","變數","尺度"],"correct":2,"explanation":"變數是每個研究對象身上要觀察的特性。例如記錄學生的身高時，「身高」是變數，「160 公分」是某位學生的觀察值。","id":"e1107-10","section":"1107 自我評量","kind":"正"},{"number":"11","prompt":"對一個變數的觀察值分等級並給予順序作為衡量尺度稱為：","options":["比例尺度","名目尺度","區間尺度","順序尺度"],"correct":3,"explanation":"順序尺度能把觀察值分級並排序。例如「不滿意、普通、滿意」可以排高低，但相鄰兩級的差距未必相等。","id":"e1107-11","section":"1107 自我評量","kind":"正"},{"number":"12","prompt":"衡量尺度有幾種？","options":["1","2","3","4"],"correct":3,"explanation":"基本衡量尺度有 4 種，分別是名目尺度、順序尺度、區間尺度、比率尺度。","id":"e1107-12","section":"1107 自我評量","kind":"正"},{"number":"13","prompt":"下列何者資料是屬於質化資料（Qualitative）？","options":["電子公司員工人數","公司工程師之職位等級","某國失業率","客戶抱怨次數"],"correct":1,"explanation":"職位等級表示初階、中階、資深等類別與順序，屬於質化資料。員工人數、失業率和抱怨次數都描述數量。","id":"e1107-13","section":"1107 自我評量","kind":"正"},{"number":"14","prompt":"下列何者資料是不屬於量化資料（Quantitative）？","options":["龍華科技大學學生住校人數","學生之平均身高","學生之平均體重","學生之血型"],"correct":3,"explanation":"血型用 A、B、AB、O 區分類別，屬於質化資料。人數、平均身高與平均體重則用數值描述數量。","id":"e1107-14","section":"1107 自我評量","kind":"反"},{"number":"15","prompt":"以下量化資料，何者為離散型資料？","options":["個人Line 好友個數","棒球隊的平均薪資","每日客服申訴電話平均通數","籃球隊員的平均體重"],"correct":0,"explanation":"好友個數是逐一計數得到的原始資料，只能取 0、1、2 等整數，屬於離散型。其他三項是從多筆資料計算的平均值。","id":"e1107-15","section":"1107 自我評量","kind":"正"},{"number":"16","prompt":"製作分組次數表或直方圖在決定組數(k)時，史塔基建議公式為？","options":["k = 1 + 2.233 × log(n)","k = 1 + 5.525 × log(n)","k = 1 + 4.625 × log(n)","k = 1 + 3.322 × log(n)","k = 1 + 2.50 × log(n)"],"correct":3,"explanation":"史塔基公式是 k ≈ 1 + 3.322 × log₁₀(n)。n 是資料筆數，k 是建議組數。這題考公式中 3.322 這個係數。","id":"e1107-16","section":"1107 自我評量","kind":"正"},{"number":"17","prompt":"製作分組次數表或直方圖在決定組距時，當樣本資料最大值為92、最小值為28、組數分為6組相等的組距，則組距可設為？","options":["7","9","11","8","10"],"correct":2,"explanation":"先算全距，92 − 28 = 64。用全距除以 6 組，64 ÷ 6 ≈ 10.67。組距取整數時向上進位，所以選 11。","id":"e1107-17","section":"1107 自我評量","kind":"算"},{"number":"18","prompt":"當下組限=70、上組限=79、下組界=69.5、上組界=79.5，則組中點為？","options":["75.5","76","74","75","74.5"],"correct":4,"explanation":"組中點是兩端的平均。用上下組限算，（70 + 79）÷ 2 = 74.5。改用上下組界算，（69.5 + 79.5）÷ 2 也等於 74.5。","id":"e1107-18","section":"1107 自我評量","kind":"算"},{"number":"19","prompt":"探討兩變數資料X與Y之間的相關程度或因果關係，可做為線性預測模式之用的統計圖為？","options":["柏拉圖","長條圖","散佈圖","直方圖","圓形圖"],"correct":2,"explanation":"散佈圖把每一組 X、Y 畫成一個點，讓你看兩者是否有關聯及變化趨勢。因果關係還需要其他證據判斷。","id":"e1107-19","section":"1107 自我評量","kind":"正"},{"number":"20","prompt":"下列對直方圖的敘述何者有誤？","options":["英文為histogram","為表達量化資料其次數分配的統計圖","適合區間尺度的連續資料","適合比率尺度的連續資料","長條間有間隙"],"correct":4,"explanation":"這題要找有誤的敘述。直方圖用長條表示相鄰的數值區間，兩個相鄰區間都有資料時，長條會相接。","id":"e1107-20","section":"1107 自我評量","kind":"反"}];
-  const letters = ["A", "B", "C", "D", "E"];
-  const directions = { "正": "單選題", "反": "反向題", "算": "計算題" };
-  const root = document.getElementById("applied-statistics-midterm-quiz");
-  const get = (id) => root.querySelector("#sq-" + id);
-  const roundPanel = get("round");
-  const counter = get("round-count");
-  const questionHeading = get("question");
-  const choices = get("choices");
-  const submit = get("submit");
-  const feedback = get("feedback");
-  const verdict = get("verdict");
-  const selectedAnswer = get("selected");
-  const answer = get("answer");
-  const explanation = get("explanation");
-  const advance = get("advance");
-  const summary = get("summary");
-  const review = get("review");
-  const restart = get("restart");
-  const progress = get("progress");
-  const progressBar = get("progress-bar");
-
-  let round;
-  let position;
-  let submitted;
-  let missed;
-  let reviewing;
-
-  function updateProgress(count) {
-    progress.setAttribute("aria-valuemax", round.length);
-    progress.setAttribute("aria-valuenow", count);
-    progressBar.style.width = (count * 100 / round.length) + "%";
-  }
-
-  function choiceText(question, index) {
-    return letters[index] + "．" + question.options[index];
-  }
-
-  function makeChoice(question, index) {
-    const label = document.createElement("label");
-    label.className = "form-check";
-    const radio = document.createElement("input");
-    radio.type = "radio";
-    radio.name = "applied-statistics-midterm-choice";
-    radio.value = index;
-    radio.className = "form-check-input";
-    const caption = document.createElement("span");
-    caption.className = "form-check-label";
-    caption.textContent = choiceText(question, index);
-    label.append(radio, caption);
-    return label;
-  }
-
-  function showQuestion(moveFocus) {
-    const question = round[position];
-    const count = "第 " + (position + 1) + " / " + round.length + " 題";
-    counter.textContent = reviewing ? "錯題複習 · " + count : count;
-    get("direction").textContent = directions[question.kind];
-    get("origin").textContent = question.section + " · 原題 " + question.number;
-    questionHeading.textContent = question.prompt;
-    choices.replaceChildren(...question.options.map((_, index) => makeChoice(question, index)));
-    choices.disabled = false;
-    submitted = false;
-    feedback.hidden = true;
-    submit.disabled = true;
-    submit.textContent = "送出本題";
-    updateProgress(position);
-    if (moveFocus) choices.querySelector("input").focus();
-  }
-
-  function startRound(questions, isReview, moveFocus) {
-    round = questions;
-    position = 0;
-    missed = [];
-    reviewing = isReview;
-    summary.hidden = true;
-    roundPanel.hidden = false;
-    showQuestion(moveFocus);
-  }
-
-  function showSummary() {
-    roundPanel.hidden = true;
-    summary.hidden = false;
-    get("summary-score").textContent = "答對 " + (round.length - missed.length) + " / " + round.length + " 題";
-    get("summary-detail").textContent = missed.length ? "答錯 " + missed.length + " 題，可重做這些題目。" : "這一輪全答對了。";
-    review.hidden = missed.length === 0;
-    restart.classList.toggle("btn-primary", review.hidden);
-    (review.hidden ? restart : review).focus();
-  }
-
-  choices.addEventListener("change", () => {
-    if (!submitted) submit.disabled = false;
-  });
-
-  // A direct click works in the inline sandbox and in the offline copy.
-  submit.addEventListener("click", () => {
-    const selection = choices.querySelector("input:checked");
-    if (!selection || submitted) return;
-
-    const question = round[position];
-    const selectedIndex = Number(selection.value);
-    const correct = selectedIndex === question.correct;
-    submitted = true;
-    if (!correct) missed.push(question);
-
-    verdict.textContent = correct ? "答對了" : "這題答錯了";
-    verdict.className = correct ? "" : "sq-verdict-incorrect";
-    selectedAnswer.hidden = correct;
-    selectedAnswer.textContent = correct ? "" : "你選的是 " + choiceText(question, selectedIndex);
-    answer.textContent = choiceText(question, question.correct);
-    explanation.textContent = question.explanation;
-    choices.disabled = true;
-    submit.disabled = true;
-    submit.textContent = "本題已送出";
-    advance.textContent = position + 1 === round.length ? "查看本輪結果" : "下一題";
-    feedback.hidden = false;
-    updateProgress(position + 1);
-    advance.focus({ preventScroll: true });
-    feedback.scrollIntoView({ block: "nearest" });
-  });
-
-  advance.addEventListener("click", () => {
-    if (!submitted) return;
-    if (position + 1 === round.length) {
-      showSummary();
-    } else {
-      position++;
-      showQuestion(true);
-    }
-  });
-
-  review.addEventListener("click", () => startRound(missed, true, true));
-  restart.addEventListener("click", () => startRound(bank, false, true));
-  startRound(bank, false, false);
-})();
-</script>
-
-  </main>
-</body>
-</html>
+    <script>
+        const quizData = [
+            {
+                id: 1, type: "single",
+                title: "1. 【單選題】依據管理學定義，管理最核心的本質涵義為何？",
+                options: [
+                    { key: "A", text: "完全仰賴個人卓越技術獨立完成目標" },
+                    { key: "B", text: "經由他人的努力與群策群力以完成工作目標" },
+                    { key: "C", text: "僅追求企業內部資源浪費的最小化" },
+                    { key: "D", text: "純粹由高階領導者進行由上而下的指令下達" }
+                ],
+                answer: ["B"],
+                explanation: "管理的本質在於「透過他人來完成工作（Getting things done through and with people）」，而非單靠個人單打獨鬥。"
+            },
+            {
+                id: 2, type: "single",
+                title: "2. 【單選題】在管理績效評估中，強調「降低資源浪費、用最少投入產出成果」的概念是指什麼？",
+                options: [
+                    { key: "A", text: "效果（Effectiveness）" },
+                    { key: "B", text: "效率（Efficiency）" },
+                    { key: "C", text: "靈活性（Flexibility）" },
+                    { key: "D", text: "正當性（Legitimacy）" }
+                ],
+                answer: ["B"],
+                explanation: "「效率」關注的是「手段（Means）」，即資源的投入與產出比；「效果」則關注「目的（Ends）」，即目標達成度。"
+            },
+            {
+                id: 3, type: "multiple",
+                title: "3. 【複選題】明茲伯格（Mintzberg）將管理者的角色劃分為哪三大面向？（複選）",
+                options: [
+                    { key: "A", text: "人際關係角色（Interpersonal Roles）" },
+                    { key: "B", text: "資訊角色（Informational Roles）" },
+                    { key: "C", text: "決策角色（Decisional Roles）" },
+                    { key: "D", text: "作業操作角色（Operational Roles）" }
+                ],
+                answer: ["A", "B", "C"],
+                explanation: "明茲伯格將管理者角色分為 3 大類共 10 小項：人際關係、資訊、決策。作業操作角色並非其分類。"
+            },
+            {
+                id: 4, type: "single",
+                title: "4. 【單選題】被譽為「科學管理之父」，首創「時間與動作研究」以追求作業標準化的是哪一位管理學者？",
+                options: [
+                    { key: "A", text: "馬克斯·韋伯（Max Weber）" },
+                    { key: "B", text: "亨利·費堯（Henri Fayol）" },
+                    { key: "C", text: "弗雷德里克·泰勒（Frederick W. Taylor）" },
+                    { key: "D", text: "艾爾頓·梅奧（Elton Mayo）" }
+                ],
+                answer: ["C"],
+                explanation: "泰勒透過科學化的時間與動作研究，尋找工作的「最佳單一方法（The One Best Way）。"
+            },
+            {
+                id: 5, type: "single",
+                title: "5. 【單選題】「不存在任何適用於所有組織的唯一最佳管理方法，管理措施必須依據情境條件而定」，此敘述屬於哪一學派的主張？",
+                options: [
+                    { key: "A", text: "古典科學管理學派" },
+                    { key: "B", text: "行政管理學派" },
+                    { key: "C", text: "權變途徑（Contingency Approach）" },
+                    { key: "D", text: "定量管理學派" }
+                ],
+                answer: ["C"],
+                explanation: "權變學派核心主張「視情況而定（It all depends）」，強調環境變數對管理方法的影響。"
+            },
+            {
+                id: 6, type: "single",
+                title: "6. 【單選題】諾貝爾獎得主赫伯特·賽蒙（Herbert Simon）提出何種理論，指出決策者受限於資訊處理能力與時間，只能追求「滿意」而非「最佳」？",
+                options: [
+                    { key: "A", text: "古典完全理性模型" },
+                    { key: "B", text: "有限理性模型（Bounded Rationality）" },
+                    { key: "C", text: "展望理論（Prospect Theory）" },
+                    { key: "D", text: "雙系統認知理論" }
+                ],
+                answer: ["B"],
+                explanation: "人類資訊處理能力與時間有限，因此設定門檻尋求「滿意解（Satisficing）」而非絕對最佳解。"
+            },
+            {
+                id: 7, type: "single",
+                title: "7. 【單選題】康納曼（Daniel Kahneman）在《快思慢想》中提出的「系統一（System 1）」，其運作特徵為何？",
+                options: [
+                    { key: "A", text: "緩慢、深思熟慮、耗費大量心力" },
+                    { key: "B", text: "快速、自動化、直覺且耗費極少認知資源" },
+                    { key: "C", text: "具備嚴謹的統計推論能力" },
+                    { key: "D", text: "完全不受任何捷思與偏誤干擾" }
+                ],
+                answer: ["B"],
+                explanation: "系統一是直覺式、快速、無意識的思考；系統二則是緩慢、深思熟慮且耗費心力的邏輯思考。"
+            },
+            {
+                id: 8, type: "single",
+                title: "8. 【單選題】決策者面對一項顯然已經失敗的專案，卻因為「已經投入大量金錢與時間心血」而不願及時止損，反而持續追加投資，此現象稱為：",
+                options: [
+                    { key: "A", text: "承諾升高（Escalation of Commitment）" },
+                    { key: "B", text: "框架效應（Framing Effect）" },
+                    { key: "C", text: "自我歸因偏誤" },
+                    { key: "D", text: "過度自信偏誤" }
+                ],
+                answer: ["A"],
+                explanation: "承諾升高是指明知決策方向錯誤，卻因不甘心先前已投入的「沉沒成本」而繼續加碼陷得更深。"
+            },
+            {
+                id: 9, type: "single",
+                title: "9. 【單選題】在職場多元性管理架構「DEI」中，「E」所代表的「公平（Equity）」，與傳統齊頭式「平等（Equality）」最大的本質差異為何？",
+                options: [
+                    { key: "A", text: "Equity 主張給予每個人完全相同、不容許任何差異的制式資源與工具" },
+                    { key: "B", text: "Equity 承認每個人起跑點與面臨的系統性障礙不同，因而針對不同個體需求精準分配資源，以追求實質公正的成果" },
+                    { key: "C", text: "Equity 僅強調在招聘廣告中加註宣傳口號" },
+                    { key: "D", text: "Equity 主張廢除所有績效考核，改採抽籤方式晉升主管" }
+                ],
+                answer: ["B"],
+                explanation: "Equality 是給每個人一樣的東西（齊頭式），而 Equity 是給予不同需要的人對應的輔助工具，以達到實質平等。"
+            },
+            {
+                id: 10, type: "single",
+                title: "10. 【單選題】女性或特定少數族群在組織升遷階梯中，往往能晉升到中階管理職，但在邁向最高管理決策層時，常遭遇一層看不見但實質存在的隱形人為體制屏障。管理學上將此障礙稱為：",
+                options: [
+                    { key: "A", text: "達克效應（Dunning-Kruger Effect）" },
+                    { key: "B", text: "玻璃天花板（Glass Ceiling）" },
+                    { key: "C", text: "社會賦閒效應（Social Loafing）" },
+                    { key: "D", text: "帕金森定律（Parkinson's Law）" }
+                ],
+                answer: ["B"],
+                explanation: "玻璃天花板用來形容女性或少數族群在升遷至高階管理層時，遭遇無形且難以突破的障礙。"
+            },
+            {
+                id: 11, type: "single",
+                title: "11. 【單選題】隨著主管在組織金字塔階層的不斷晉升，下列哪一種管理技能的重要性會顯著上升？",
+                options: [
+                    { key: "A", text: "專業技術操作技能" },
+                    { key: "B", text: "概念化技能（Conceptual Skills）" },
+                    { key: "C", text: "機械排程技能" },
+                    { key: "D", text: "特定軟體編程技能" }
+                ],
+                answer: ["B"],
+                explanation: "高階主管需要宏觀思考（概念技能），中階主管需要人際技能，基層主管則最依賴技術技能。"
+            },
+            {
+                id: 12, type: "single",
+                title: "12. 【單選題】主管在分配年度研發預算、指派人力資源投入專案時，主要體現了明茲伯格的哪一項決策角色？",
+                options: [
+                    { key: "A", text: "企業家角色" },
+                    { key: "B", text: "資源分配者（Resource Allocator）" },
+                    { key: "C", text: "混亂排除者" },
+                    { key: "D", text: "傳播者" }
+                ],
+                answer: ["B"],
+                explanation: "資源分配者負責決定組織內資金、時間、設備與人力等稀缺資源的流向。"
+            },
+            {
+                id: 13, type: "single",
+                title: "13. 【單選題】某新創公司為了趕在競品上市前發表新系統，不惜耗費數倍加班費與外包成本達成上市目標，這種營運狀態在管理學上屬於：",
+                options: [
+                    { key: "A", text: "高效率且高效果" },
+                    { key: "B", text: "高效率但低效果" },
+                    { key: "C", text: "低效率但高效果" },
+                    { key: "D", text: "低效率且低效果" }
+                ],
+                answer: ["C"],
+                explanation: "達成目標（高效果），但因為成本超支、浪費資源（低效率）。"
+            },
+            {
+                id: 14, type: "single",
+                title: "14. 【單選題】在卡茲（Robert Katz）的管理技能模型中，哪一種技能在「基層、中層、高層」管理者中皆維持同等極高的重要性？",
+                options: [
+              
